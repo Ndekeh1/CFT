@@ -1,0 +1,122 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "this is to create a vpc",
+    "Metadata": {
+
+    },
+    "Parameters": {
+    
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+    "DevVpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "Tags":[{"Key":"name","Value":"DevVpc"}]
+      }
+    },
+    
+    "DevVpcigw": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags":[{"Key":"name","Value":"DevVpcigw"}]
+      }
+     },
+
+    "AttachGateway": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId":  { "Ref": "DevVpc" },
+        "InternetGatewayId": { "Ref":"DevVpcigw"}
+      }
+    },
+    
+    "DevVpcrtb": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId":  { "Ref": "DevVpc" },
+        "Tags":[{"Key":"name","Value":"DevVpcrtb"}]
+      }
+    },
+    
+    "pubrt": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId":{ "Ref": "DevVpcrtb" },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {"Ref": "DevVpcigw" }
+        
+      }
+    },
+    
+    
+    "pubsub1ass": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId":{ "Ref": "DevVpcpubsub1" },
+        "RouteTableId": { "Ref": "DevVpcrtb" }
+      
+      }
+    },
+    "pubsub1ass1": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId":{ "Ref": "DevVpcpubsub2" },
+        "RouteTableId": { "Ref": "DevVpcrtb" }
+      
+      }
+    },
+    
+    
+    "DevVpcpubsub1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "-us-east-1a",
+        "VpcId":  { "Ref": "DevVpc" },
+        "CidrBlock": "10.0.1.0/24",
+        "Tags": [{"Key":"name","Value":"DevVpcpubsub1"}]
+      }
+    },
+    
+    "DevVpcprtsub1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-east-1a",
+        "VpcId":  { "Ref": "DevVpc" },
+        "CidrBlock": "10.0.2.0/24",
+        "Tags": [{"Key":"name","Value":"DevVpcprtsub1"}]
+      }
+    },
+    
+    
+    "DevVpcpubsub2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-east-1b",
+        "VpcId":  { "Ref": "DevVpc" },
+        "CidrBlock": "10.0.3.0/24",
+        "Tags": [{"Key":"name","Value":"DevVpcpubsub2"}]
+      }
+    },
+
+    "DevVpcprtsub2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-east-1b",
+        "VpcId":  { "Ref": "DevVpc" },
+        "CidrBlock": "10.0.4.0/24",
+        "Tags": [{"Key":"name","Value":"DevVpcprtsub2"}]
+      }
+    }
+
+},
+    "Outputs": {
+
+    }
+}
